@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QCalendarWidget, QLabel, QVBoxLayout, QWidget, QPushButton, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QCalendarWidget, QLabel, QVBoxLayout, QWidget, QPushButton, QInputDialog
 
 class CalendarApp(QMainWindow):
     def __init__(self):
@@ -24,4 +24,28 @@ class CalendarApp(QMainWindow):
         layout.addWidget(self.add_button)
 
         container = QWidget()
-        container
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
+    def date_selected(self, date):
+        date_str = date.toString()
+        self.label.setText(f"Selected Date: {date_str}")
+        if date_str in self.events:
+            self.label.setText(f"Selected Date: {date_str}\nEvents: {', '.join(self.events[date_str])}")
+        else:
+            self.label.setText(f"Selected Date: {date_str}\nNo events.")
+
+    def add_event(self):
+        date = self.calendar.selectedDate().toString()
+        text, ok = QInputDialog.getText(self, 'Event', 'Enter event details:')
+        if ok and text:
+            if date not in self.events:
+                self.events[date] = []
+            self.events[date].append(text)
+            self.date_selected(self.calendar.selectedDate())
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = CalendarApp()
+    window.show()
+    sys.exit(app.exec_())
