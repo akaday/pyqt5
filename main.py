@@ -24,4 +24,16 @@ class CalendarApp(QMainWindow):
         layout.addWidget(self.add_button)
 
         container = QWidget()
-        container.setLayout(layout
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
+    def date_selected(self, date):
+        date_str = date.toString()
+        self.label.setText(f"Selected Date: {date_str}")
+        if date_str in self.events:
+            self.label.setText(f"Selected Date: {date_str}\nEvents: {', '.join(self.events[date_str])}")
+        else:
+            self.label.setText(f"Selected Date: {date_str}\nNo events.")
+
+    def add_event(self):
+        date = self.calendar.selectedDate().toString()
