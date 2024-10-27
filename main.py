@@ -1,25 +1,27 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QCalendarWidget, QLabel, QVBoxLayout, QWidget, QPushButton, QMessageBox, QInputDialog
 
-class MainWindow(QMainWindow):
+class CalendarApp(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("PyQt Application")
-        self.setGeometry(100, 100, 600, 400)
+        self.setWindowTitle("Family Calendar")
+        self.setGeometry(100, 100, 800, 600)
 
-        self.label = QLabel("Hello, PyQt!", self)
-        self.label.move(250, 150)
+        self.events = {}
 
-        self.button = QPushButton("Click Me", self)
-        self.button.move(250, 200)
-        self.button.clicked.connect(self.show_message)
+        layout = QVBoxLayout()
+        self.calendar = QCalendarWidget(self)
+        self.calendar.clicked.connect(self.date_selected)
 
-    def show_message(self):
-        QMessageBox.information(self, "Message", "Button Clicked!")
+        self.label = QLabel("Select a date to add events.", self)
 
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
+        self.add_button = QPushButton("Add Event", self)
+        self.add_button.clicked.connect(self.add_event)
 
-sys.exit(app.exec_())
+        layout.addWidget(self.calendar)
+        layout.addWidget(self.label)
+        layout.addWidget(self.add_button)
+
+        container = QWidget()
+        container.setLayout(layout
